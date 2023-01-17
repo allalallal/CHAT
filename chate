@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mon site de messages</title>
+  <style>
+    form {
+      width: 50%;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 12px 20px;
+      box-sizing: border-box;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      background-color: #f8f8f8;
+      font-size: 16px;
+      resize: none;
+    }
+  </style>
+  <script>
+    function submitForm() {
+      // Récupération des données du formulaire
+      var name = document.getElementById("name").value;
+      var message = document.getElementById("message").value;
+
+      // Envoi des données au serveur via une requête AJAX
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "submit_message.php", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.send("name=" + name + "&message=" + message);
+
+      // Effacement des données du formulaire
+      document.getElementById("name").value = "";
+      document.getElementById("message").value = "";
+    }
+
+    function getMessages() {
+      // Envoi d'une requête AJAX pour récupérer les messages
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "get_messages.php", true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          // Affichage des messages
+          document.getElementById("messages").innerHTML = xhr.responseText;
+        }
+      };
+      xhr.send();
+    }
+
+    // Appel de la fonction getMessages toutes les 5 secondes
+    setInterval(getMessages, 5000);
+  </script>
+</head>
+<body>
+  <form>
+    <label for="name">Nom:</label>
+    <input type="text" id="name" name="name"><br><br>
+    <label for="message">Message:</label>
+    <textarea id="message" name="message"></textarea><br><br>
+    <input type="button" value="Envoyer" onclick="submitForm()">
+  </form>
+  <div id="messages"></div>
+</body>
+</html>
